@@ -2,8 +2,7 @@
 /**
  * Получаем объект для работы с бд
  */
-
-function getConnection ()
+function getConnection()
 {
     try {
         $dbConfig = include ('config/db.php');

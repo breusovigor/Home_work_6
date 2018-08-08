@@ -4,17 +4,14 @@ include 'components/db.php';
 include 'components/validation.php';
 
 $dbConnection = getConnection();
+$sqlInsert  = 'INSERT INTO student (name, age, university_id) VALUES (:name, :age, :university_id)';
 if (isset($_POST['send'])) {
     $name = $_POST['name'];
     $age = $_POST['age'];
-
     if (!empty($name) && !empty($age)){
-        if (check_length($name, 2, 15) && check_age($age, 18, 100)) {
+        if (checkLength($name, 2, 15) && checkAge($age, 18, 100)) {
             $success = true;
-            $sth = $dbConnection->prepare('INSERT INTO student
-                (name, age, university_id) 
-                VALUES 
-                (:name, :age, :university_id)');
+            $sth = $dbConnection->prepare($sqlInsert);
             $result = $sth->execute([
                 'name' => $_POST['name'],
                 'age' => $_POST['age'],
@@ -28,7 +25,6 @@ if (isset($_POST['send'])) {
     }
     if ($result) {
         $message = 'User added';
-
     } else {
         $message = 'Error';
         $success = false;
@@ -38,12 +34,10 @@ if (isset($_POST['send'])) {
 if (isset($_GET['success'])) {
     echo "<p>{$_GET['message']}</p>";
 }
-
 if (isset($_POST['get'])) {
     $getStudent = $dbConnection->prepare('SELECT name, age, university_id FROM student');
     $getStudent->execute();
 }
-
 ?>
     <!doctype html>
     <html lang="en">
